@@ -1,30 +1,50 @@
 # nativemessagebundle project
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+Seems MessageBundle is being resolved only to default locale when using native.
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+## JVM test:
 
-## Running the application in dev mode
-
-You can run your application in dev mode that enables live coding using:
+Start app in dev mode
 ```
-./mvnw quarkus:dev
+mvn quarkus:dev
 ```
 
-## Packaging and running the application
+Call with default "en"
+```
+curl localhost:8080/en
+```
 
-The application can be packaged using `./mvnw package`.
-It produces the `nativemessagebundle-1.0.0-SNAPSHOT-runner.jar` file in the `/target` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/lib` directory.
+Result: "English key"
 
-The application is now runnable using `java -jar target/nativemessagebundle-1.0.0-SNAPSHOT-runner.jar`.
+Call with fi
+```
+curl localhost:8080/en
+```
+Result: "Finnish key"
 
-## Creating a native executable
+## Native
 
-You can create a native executable using: `./mvnw package -Pnative`.
+Create native image
+```
+mvn clean package -DskipTests -Pnative
+```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using: `./mvnw package -Pnative -Dquarkus.native.container-build=true`.
+Start native
+```
+target/nativemessagebundle-1.0.0-SNAPSHOT-runner
+```
 
-You can then execute your native executable with: `./target/nativemessagebundle-1.0.0-SNAPSHOT-runner`
+Call with default "en"
+```
+curl localhost:8080/en
+```
 
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/building-native-image.
+Result: "English key"
+
+Call with fi
+```
+curl localhost:8080/en
+```
+Result: "English key" instead of "Finnish key".
+
+
